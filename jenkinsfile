@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/your-username/ci-demo.git' // Your GitHub repository
+                git 'https://github.com/palanikalyan/Spring-jenkins.git' // Your GitHub repository
             }
         }
 
