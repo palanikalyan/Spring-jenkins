@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven' // Make sure Maven is configured in Jenkins
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/your-username/ci-demo.git' // Your GitHub repository
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh './mvnw clean package'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh './mvnw test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                // Add actual deployment steps here if needed
+            }
+        }
+    }
+
+    post {
+        always {
+            junit '**/target/surefire-reports/*.xml' // Report test results
+            cleanWs() // Clean workspace after build
+        }
+    }
+}
