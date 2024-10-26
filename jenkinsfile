@@ -1,47 +1,39 @@
 pipeline {
     agent any
-
+    
     tools {
-        maven 'Maven' // Make sure Maven is configured in Jenkins
+        maven 'Maven' // Make sure this matches your Jenkins tool configuration name
     }
-
+    
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/palanikalyan/Spring-jenkins.git' // Your GitHub repository
+                git 'https://github.com/palanikalyan/Spring-jenkins.git'
             }
         }
-
+        
         stage('Build') {
             steps {
-                sh './mvnw clean package'
+                bat 'mvn clean install' // Use 'bat' instead of 'sh' for Windows
             }
         }
-
+        
         stage('Test') {
             steps {
-                sh './mvnw test'
+                bat 'mvn test'
             }
         }
-
+        
         stage('Package') {
             steps {
-                archiveArtifacts artifacts: '**/target/*.jar', allowEmptyArchive: true
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
-                // Add actual deployment steps here if needed
+                bat 'mvn package'
             }
         }
     }
-
+    
     post {
         always {
-            junit '**/target/surefire-reports/*.xml' // Report test results
-            cleanWs() // Clean workspace after build
+            junit '**/target/surefire-reports/*.xml'
         }
     }
 }
